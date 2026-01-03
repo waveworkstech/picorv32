@@ -10,7 +10,7 @@
 #define ENABLE_RVTST
 #define ENABLE_SIEVE
 #define ENABLE_MULTST
-#define ENABLE_STATS
+// #define ENABLE_STATS  <-- DISABLED: No hardware counters
 #define ENABLE_STRESS
 
 #ifndef ENABLE_QREGS
@@ -19,7 +19,8 @@
 
 // Only save registers in IRQ wrapper that are to be saved by the caller in
 // the RISC-V ABI, with the excpetion of the stack pointer. The IRQ handler
-// will save the rest if necessary. I.e. skip x3, x4, x8, x9, and x18-x27.
+// will save the rest if necessary. I.e. skip x3, x4, x8, x9.
+// NOTE: For RV32E, we also skip x16-x31 because they don't exist.
 #undef ENABLE_FASTIRQ
 
 #include "custom_ops.S"
@@ -81,12 +82,7 @@ irq_vec:
 	sw x13, 13*4(x1)
 	sw x14, 14*4(x1)
 	sw x15, 15*4(x1)
-	sw x16, 16*4(x1)
-	sw x17, 17*4(x1)
-	sw x28, 28*4(x1)
-	sw x29, 29*4(x1)
-	sw x30, 30*4(x1)
-	sw x31, 31*4(x1)
+	// RV32E: Stop at x15
 #else
 	sw x3,   3*4(x1)
 	sw x4,   4*4(x1)
@@ -101,22 +97,7 @@ irq_vec:
 	sw x13, 13*4(x1)
 	sw x14, 14*4(x1)
 	sw x15, 15*4(x1)
-	sw x16, 16*4(x1)
-	sw x17, 17*4(x1)
-	sw x18, 18*4(x1)
-	sw x19, 19*4(x1)
-	sw x20, 20*4(x1)
-	sw x21, 21*4(x1)
-	sw x22, 22*4(x1)
-	sw x23, 23*4(x1)
-	sw x24, 24*4(x1)
-	sw x25, 25*4(x1)
-	sw x26, 26*4(x1)
-	sw x27, 27*4(x1)
-	sw x28, 28*4(x1)
-	sw x29, 29*4(x1)
-	sw x30, 30*4(x1)
-	sw x31, 31*4(x1)
+	// RV32E: Stop at x15
 #endif
 
 #else // ENABLE_QREGS
@@ -134,12 +115,7 @@ irq_vec:
 	sw x13, 13*4+0x200(zero)
 	sw x14, 14*4+0x200(zero)
 	sw x15, 15*4+0x200(zero)
-	sw x16, 16*4+0x200(zero)
-	sw x17, 17*4+0x200(zero)
-	sw x28, 28*4+0x200(zero)
-	sw x29, 29*4+0x200(zero)
-	sw x30, 30*4+0x200(zero)
-	sw x31, 31*4+0x200(zero)
+	// RV32E: Stop at x15
 #else
 	sw gp,   0*4+0x200(zero)
 	sw x1,   1*4+0x200(zero)
@@ -157,22 +133,7 @@ irq_vec:
 	sw x13, 13*4+0x200(zero)
 	sw x14, 14*4+0x200(zero)
 	sw x15, 15*4+0x200(zero)
-	sw x16, 16*4+0x200(zero)
-	sw x17, 17*4+0x200(zero)
-	sw x18, 18*4+0x200(zero)
-	sw x19, 19*4+0x200(zero)
-	sw x20, 20*4+0x200(zero)
-	sw x21, 21*4+0x200(zero)
-	sw x22, 22*4+0x200(zero)
-	sw x23, 23*4+0x200(zero)
-	sw x24, 24*4+0x200(zero)
-	sw x25, 25*4+0x200(zero)
-	sw x26, 26*4+0x200(zero)
-	sw x27, 27*4+0x200(zero)
-	sw x28, 28*4+0x200(zero)
-	sw x29, 29*4+0x200(zero)
-	sw x30, 30*4+0x200(zero)
-	sw x31, 31*4+0x200(zero)
+	// RV32E: Stop at x15
 #endif
 
 #endif // ENABLE_QREGS
@@ -222,12 +183,7 @@ irq_vec:
 	lw x13, 13*4(x1)
 	lw x14, 14*4(x1)
 	lw x15, 15*4(x1)
-	lw x16, 16*4(x1)
-	lw x17, 17*4(x1)
-	lw x28, 28*4(x1)
-	lw x29, 29*4(x1)
-	lw x30, 30*4(x1)
-	lw x31, 31*4(x1)
+	// RV32E: Stop at x15
 #else
 	lw x3,   3*4(x1)
 	lw x4,   4*4(x1)
@@ -242,22 +198,7 @@ irq_vec:
 	lw x13, 13*4(x1)
 	lw x14, 14*4(x1)
 	lw x15, 15*4(x1)
-	lw x16, 16*4(x1)
-	lw x17, 17*4(x1)
-	lw x18, 18*4(x1)
-	lw x19, 19*4(x1)
-	lw x20, 20*4(x1)
-	lw x21, 21*4(x1)
-	lw x22, 22*4(x1)
-	lw x23, 23*4(x1)
-	lw x24, 24*4(x1)
-	lw x25, 25*4(x1)
-	lw x26, 26*4(x1)
-	lw x27, 27*4(x1)
-	lw x28, 28*4(x1)
-	lw x29, 29*4(x1)
-	lw x30, 30*4(x1)
-	lw x31, 31*4(x1)
+	// RV32E: Stop at x15
 #endif
 
 	picorv32_getq_insn(x1, q1)
@@ -284,12 +225,7 @@ irq_vec:
 	lw x13, 13*4+0x200(zero)
 	lw x14, 14*4+0x200(zero)
 	lw x15, 15*4+0x200(zero)
-	lw x16, 16*4+0x200(zero)
-	lw x17, 17*4+0x200(zero)
-	lw x28, 28*4+0x200(zero)
-	lw x29, 29*4+0x200(zero)
-	lw x30, 30*4+0x200(zero)
-	lw x31, 31*4+0x200(zero)
+	// RV32E: Stop at x15
 #else
 	lw gp,   0*4+0x200(zero)
 	lw x1,   1*4+0x200(zero)
@@ -307,22 +243,7 @@ irq_vec:
 	lw x13, 13*4+0x200(zero)
 	lw x14, 14*4+0x200(zero)
 	lw x15, 15*4+0x200(zero)
-	lw x16, 16*4+0x200(zero)
-	lw x17, 17*4+0x200(zero)
-	lw x18, 18*4+0x200(zero)
-	lw x19, 19*4+0x200(zero)
-	lw x20, 20*4+0x200(zero)
-	lw x21, 21*4+0x200(zero)
-	lw x22, 22*4+0x200(zero)
-	lw x23, 23*4+0x200(zero)
-	lw x24, 24*4+0x200(zero)
-	lw x25, 25*4+0x200(zero)
-	lw x26, 26*4+0x200(zero)
-	lw x27, 27*4+0x200(zero)
-	lw x28, 28*4+0x200(zero)
-	lw x29, 29*4+0x200(zero)
-	lw x30, 30*4+0x200(zero)
-	lw x31, 31*4+0x200(zero)
+	// RV32E: Stop at x15
 #endif
 
 #endif // ENABLE_QREGS
@@ -361,22 +282,7 @@ start:
 	addi x13, zero, 0
 	addi x14, zero, 0
 	addi x15, zero, 0
-	addi x16, zero, 0
-	addi x17, zero, 0
-	addi x18, zero, 0
-	addi x19, zero, 0
-	addi x20, zero, 0
-	addi x21, zero, 0
-	addi x22, zero, 0
-	addi x23, zero, 0
-	addi x24, zero, 0
-	addi x25, zero, 0
-	addi x26, zero, 0
-	addi x27, zero, 0
-	addi x28, zero, 0
-	addi x29, zero, 0
-	addi x30, zero, 0
-	addi x31, zero, 0
+	// RV32E: Do NOT init x16-x31, they don't exist
 
 #ifdef ENABLE_HELLO
 	/* set stack pointer */
@@ -451,10 +357,11 @@ start:
 	TEST(mulhu)
 	TEST(mul)
 
-	TEST(div)
-	TEST(divu)
-	TEST(rem)
-	TEST(remu)
+	// RV32E typically excludes DIV.
+	// TEST(div)
+	// TEST(divu)
+	// TEST(rem)
+	// TEST(remu)
 
 	TEST(simple)
 
@@ -526,19 +433,18 @@ hard_mulhu:
 	mulhu a0, a0, a1
 	ret
 
-hard_div:
-	div a0, a0, a1
-	ret
+// hard_div:
+// 	div a0, a0, a1
+// 	ret
 
-hard_divu:
-	divu a0, a0, a1
-	ret
+// hard_divu:
+// 	divu a0, a0, a1
+// 	ret
 
-hard_rem:
-	rem a0, a0, a1
-	ret
+// hard_rem:
+// 	rem a0, a0, a1
+// 	ret
 
-hard_remu:
-	remu a0, a0, a1
-	ret
-
+// hard_remu:
+// 	remu a0, a0, a1
+// 	ret
