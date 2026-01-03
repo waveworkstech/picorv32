@@ -10,6 +10,11 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h> //Added for size_t
+
+// Memory Map & Peripherals
+#define OUT_PASS_ADDR 0x20000000
+#define OUT_FAIL_ADDR 0x20000004
 
 // irq.c
 uint32_t *irq(uint32_t *regs, uint32_t irqs);
@@ -26,6 +31,12 @@ void hello(void);
 // sieve.c
 void sieve(void);
 
+// System Helpers (Implemented in stress.c)
+void *memcpy(void *dest, const void *src, size_t n);
+
+// stress.c
+void run_stress_test(void);
+
 // multest.c
 uint32_t hard_mul(uint32_t a, uint32_t b);
 uint32_t hard_mulh(uint32_t a, uint32_t b);
@@ -41,3 +52,5 @@ void multest(void);
 void stats(void);
 
 #endif
+
+

@@ -11,6 +11,7 @@
 #define ENABLE_SIEVE
 #define ENABLE_MULTST
 #define ENABLE_STATS
+#define ENABLE_STRESS
 
 #ifndef ENABLE_QREGS
 #  undef ENABLE_RVTST
@@ -28,6 +29,7 @@
 	.global hello
 	.global sieve
 	.global multest
+	.global run_stress_test
 	.global hard_mul
 	.global hard_mulh
 	.global hard_mulhsu
@@ -442,6 +444,8 @@ start:
 	TEST(or)
 	TEST(and)
 
+	TEST(rvc_test)
+
 	TEST(mulh)
 	TEST(mulhsu)
 	TEST(mulhu)
@@ -475,6 +479,11 @@ start:
 #ifdef ENABLE_STATS
 	/* call stats C code */
 	jal ra,stats
+#endif
+
+#ifdef ENABLE_STRESS
+	/* call stress test C code */
+	jal ra,run_stress_test
 #endif
 
 	/* print "DONE\n" */
