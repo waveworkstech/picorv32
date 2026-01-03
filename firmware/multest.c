@@ -101,6 +101,10 @@ void multest(void)
 
 		print_str(" OK\n");
 
+		// ----------------------------------------
+		// Division Tests (DISABLED: ENABLE_DIV=0)
+		// ----------------------------------------
+		/*
 		uint32_t h_div, h_divu, h_rem, h_remu;
 		print_str("hard div   ");
 
@@ -146,6 +150,8 @@ void multest(void)
 		}
 
 		print_str(" OK\n");
+		*/
+	    }
 	}
 }
 
