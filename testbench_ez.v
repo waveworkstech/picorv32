@@ -44,7 +44,28 @@ module testbench;
 		end
 	end
 
+	// Parameters set for your Custom Configuration
 	picorv32 #(
+		.ENABLE_COUNTERS      (0),
+		.ENABLE_COUNTERS64    (0),
+		.ENABLE_REGS_16_31    (0),
+		.ENABLE_REGS_DUALPORT (0),
+		.TWO_STAGE_SHIFT      (1),
+		.BARREL_SHIFTER       (0),
+		.TWO_CYCLE_COMPARE    (1),
+		.TWO_CYCLE_ALU        (1),
+		.COMPRESSED_ISA       (1),
+		.CATCH_MISALIGN       (0),
+		.CATCH_ILLINSN        (0),
+		.ENABLE_PCPI          (0),
+		.ENABLE_MUL           (1),
+		.ENABLE_FAST_MUL      (0),
+		.ENABLE_DIV           (0),
+		.ENABLE_IRQ           (1),
+		.ENABLE_IRQ_QREGS     (1),
+		.ENABLE_IRQ_TIMER     (0),
+		.ENABLE_TRACE         (0),
+		.REGS_INIT_ZERO       (0)
 	) uut (
 		.clk         (clk        ),
 		.resetn      (resetn     ),
