@@ -8,7 +8,8 @@
 #endif
 
 #define RVTEST_RV32U
-#define TESTNUM x28
+// RV32E: Use x15 (a5) instead of x28 (t3)
+#define TESTNUM x15
 
 #define RVTEST_CODE_BEGIN		\
 	.text;				\

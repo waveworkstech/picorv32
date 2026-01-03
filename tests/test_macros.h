@@ -8,12 +8,13 @@
 # Helper macros
 #-----------------------------------------------------------------------
 
+// RV32E Change: Replaced x29 with x14
 #define TEST_CASE( testnum, testreg, correctval, code... ) \
 test_ ## testnum: \
     code; \
-    li  x29, correctval; \
+    li  x14, correctval; \
     li  TESTNUM, testnum; \
-    bne testreg, x29, fail;
+    bne testreg, x14, fail;
 
 # We use a macro hack to simpify code generation for various numbers
 # of bubble cycles.
@@ -255,6 +256,7 @@ test_ ## testnum: \
       load_inst x3, offset(x1); \
     )
 
+// RV32E Change: Replaced x29 with x14
 #define TEST_LD_DEST_BYPASS( testnum, nop_cycles, inst, result, offset, base ) \
 test_ ## testnum: \
     li  TESTNUM, testnum; \
@@ -263,12 +265,13 @@ test_ ## testnum: \
     inst x3, offset(x1); \
     TEST_INSERT_NOPS_ ## nop_cycles \
     addi  x6, x3, 0; \
-    li  x29, result; \
-    bne x6, x29, fail; \
+    li  x14, result; \
+    bne x6, x14, fail; \
     addi  x4, x4, 1; \
     li  x5, 2; \
     bne x4, x5, 1b; \
 
+// RV32E Change: Replaced x29 with x14
 #define TEST_LD_SRC1_BYPASS( testnum, nop_cycles, inst, result, offset, base ) \
 test_ ## testnum: \
     li  TESTNUM, testnum; \
@@ -276,12 +279,13 @@ test_ ## testnum: \
 1:  la  x1, base; \
     TEST_INSERT_NOPS_ ## nop_cycles \
     inst x3, offset(x1); \
-    li  x29, result; \
-    bne x3, x29, fail; \
+    li  x14, result; \
+    bne x3, x14, fail; \
     addi  x4, x4, 1; \
     li  x5, 2; \
     bne x4, x5, 1b \
 
+// RV32E Change: Replaced x29 with x14
 #define TEST_ST_SRC12_BYPASS( testnum, src1_nops, src2_nops, load_inst, store_inst, result, offset, base ) \
 test_ ## testnum: \
     li  TESTNUM, testnum; \
@@ -292,12 +296,13 @@ test_ ## testnum: \
     TEST_INSERT_NOPS_ ## src2_nops \
     store_inst x1, offset(x2); \
     load_inst x3, offset(x2); \
-    li  x29, result; \
-    bne x3, x29, fail; \
+    li  x14, result; \
+    bne x3, x14, fail; \
     addi  x4, x4, 1; \
     li  x5, 2; \
     bne x4, x5, 1b \
 
+// RV32E Change: Replaced x29 with x14
 #define TEST_ST_SRC21_BYPASS( testnum, src1_nops, src2_nops, load_inst, store_inst, result, offset, base ) \
 test_ ## testnum: \
     li  TESTNUM, testnum; \
@@ -308,8 +313,8 @@ test_ ## testnum: \
     TEST_INSERT_NOPS_ ## src2_nops \
     store_inst x1, offset(x2); \
     load_inst x3, offset(x2); \
-    li  x29, result; \
-    bne x3, x29, fail; \
+    li  x14, result; \
+    bne x3, x14, fail; \
     addi  x4, x4, 1; \
     li  x5, 2; \
     bne x4, x5, 1b \
@@ -415,13 +420,14 @@ test_ ## testnum: \
     li  x5, 2; \
     bne x4, x5, 1b \
 
+// RV32E Change: Replaced x19 with x13
 #define TEST_JALR_SRC1_BYPASS( testnum, nop_cycles, inst ) \
 test_ ## testnum: \
     li  TESTNUM, testnum; \
     li  x4, 0; \
 1:  la  x6, 2f; \
     TEST_INSERT_NOPS_ ## nop_cycles \
-    inst x19, x6, 0; \
+    inst x13, x6, 0; \
     bne x0, TESTNUM, fail; \
 2:  addi  x4, x4, 1; \
     li  x5, 2; \
