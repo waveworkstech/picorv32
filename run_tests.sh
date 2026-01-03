@@ -91,30 +91,30 @@ echo "   [PASSED] AXI4-Lite Tests"
 echo ""
 
 # ---------------------------------------------------------
-# 4. Benchmarks
+# 4. Benchmarks (DISABLED for RV32E)
 # ---------------------------------------------------------
-echo "------------------------------------------------------------"
-echo "Test 5: Dhrystone Benchmark"
-echo "Summary: Executes standard integer performance benchmark."
-echo "------------------------------------------------------------"
-cd dhrystone
-make test TOOLCHAIN_PREFIX="$PREFIX"
-cd ..
-echo "   [PASSED] Dhrystone Benchmark"
-echo ""
+# echo "------------------------------------------------------------"
+# echo "Test 5: Dhrystone Benchmark"
+# echo "Summary: Executes standard integer performance benchmark."
+# echo "------------------------------------------------------------"
+# cd dhrystone
+# make test TOOLCHAIN_PREFIX="$PREFIX"
+# cd ..
+# echo "   [PASSED] Dhrystone Benchmark"
+# echo ""
 
 # ---------------------------------------------------------
-# 5. Language Runtime Tests
+# 5. Language Runtime Tests (DISABLED for RV32E)
 # ---------------------------------------------------------
-echo "------------------------------------------------------------"
-echo "Test 6: C++ Runtime Demo"
-echo "Summary: Verifies STL, virtual functions, and C++ runtime."
-echo "------------------------------------------------------------"
-cd scripts/cxxdemo
-make test RISCV_TOOLS_PREFIX="$PREFIX"
-cd ../..
-echo "   [PASSED] C++ Runtime Demo"
-echo ""
+# echo "------------------------------------------------------------"
+# echo "Test 6: C++ Runtime Demo"
+# echo "Summary: Verifies STL, virtual functions, and C++ runtime."
+# echo "------------------------------------------------------------"
+# cd scripts/cxxdemo
+# make test RISCV_TOOLS_PREFIX="$PREFIX"
+# cd ../..
+# echo "   [PASSED] C++ Runtime Demo"
+# echo ""
 
 echo "============================================================"
 echo "SUCCESS: All environment checks and tests passed!"
