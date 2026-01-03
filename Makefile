@@ -2,7 +2,8 @@
 RISCV_GNU_TOOLCHAIN_GIT_REVISION = 411d134
 # RISCV_GNU_TOOLCHAIN_INSTALL_PREFIX = /opt/riscv32
 RISCV_RESOURCES = $(HOME)/riscv-sources
-RISCV_GNU_TOOLCHAIN_INSTALL_PREFIX = $(HOME)/riscv32_src/riscv32
+RISCV_GNU_TOOLCHAIN_INSTALL_DIR = $(HOME)/riscv32_src
+RISCV_GNU_TOOLCHAIN_INSTALL_PREFIX = $(RISCV_GNU_TOOLCHAIN_INSTALL_DIR)/riscv32
 
 # Give the user some easy overrides for local configuration quirks.
 # If you change one of these and it breaks, then you get to keep both pieces.
@@ -131,13 +132,15 @@ tests/%.o: tests/%.S tests/riscv_test.h tests/test_macros.h
 
 download-tools:
 	mkdir -p $(RISCV_RESOURCES)
-	$(foreach REPO,riscv-gnu-toolchain riscv-binutils-gdb riscv-gcc riscv-glibc riscv-newlib, \
-		if ! test -d $(RISCV_RESOURCES)/$(REPO).git; then \
+	@for REPO in riscv-gnu-toolchain riscv-binutils-gdb riscv-gcc riscv-glibc riscv-newlib; do \
+		if [ ! -d "$(RISCV_RESOURCES)/$$REPO.git" ]; then \
 			echo "Cloning $$REPO..."; \
 			GIT_PACK_THREADS=1 git clone --bare https://github.com/riscv/$$REPO $(RISCV_RESOURCES)/$$REPO.git; \
 		else \
-			(cd $(RISCV_RESOURCES)/$$REPO.git; git fetch); \
-		fi;)
+			echo "Updating $$REPO..."; \
+			(cd $(RISCV_RESOURCES)/$$REPO.git && git fetch); \
+		fi; \
+	done
 
 define build_tools_template
 build-$(1)-tools:
