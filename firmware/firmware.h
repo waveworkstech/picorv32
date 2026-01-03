@@ -42,15 +42,16 @@ uint32_t hard_mul(uint32_t a, uint32_t b);
 uint32_t hard_mulh(uint32_t a, uint32_t b);
 uint32_t hard_mulhsu(uint32_t a, uint32_t b);
 uint32_t hard_mulhu(uint32_t a, uint32_t b);
-uint32_t hard_div(uint32_t a, uint32_t b);
-uint32_t hard_divu(uint32_t a, uint32_t b);
-uint32_t hard_rem(uint32_t a, uint32_t b);
-uint32_t hard_remu(uint32_t a, uint32_t b);
+
+// Disabled: ENABLE_DIV=0
+// uint32_t hard_div(uint32_t a, uint32_t b);
+// uint32_t hard_divu(uint32_t a, uint32_t b);
+// uint32_t hard_rem(uint32_t a, uint32_t b);
+// uint32_t hard_remu(uint32_t a, uint32_t b);
+
 void multest(void);
 
-// stats.c
-void stats(void);
+// stats.c (Disabled: ENABLE_COUNTERS=0)
+// void stats(void);
 
 #endif
-
-
