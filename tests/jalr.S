@@ -21,11 +21,11 @@ RVTEST_CODE_BEGIN
 
 test_2:
   li  TESTNUM, 2
-  li  x31, 0
+  li  x14, 0
   la  x2, target_2
 
 linkaddr_2:
-  jalr x19, x2, 0
+  jalr x13, x2, 0
   nop
   nop
 
@@ -34,15 +34,15 @@ linkaddr_2:
 target_2:
   la  x1, linkaddr_2
   addi x1, x1, 4
-  bne x1, x19, fail
+  bne x1, x13, fail
 
   #-------------------------------------------------------------
-  # Test 3: Check r0 target and that r31 is not modified
+  # Test 3: Check r0 target and that r14 (formerly r31) is not modified
   #-------------------------------------------------------------
 
 test_3:
   li  TESTNUM, 3
-  li  x31, 0
+  li  x14, 0
   la  x3, target_3
 
 linkaddr_3:
@@ -52,7 +52,7 @@ linkaddr_3:
   j fail
 
 target_3:
-  bne x31, x0, fail
+  bne x14, x0, fail
 
   #-------------------------------------------------------------
   # Bypassing tests
@@ -69,7 +69,7 @@ target_3:
   TEST_CASE( 7, x1, 4, \
     li  x1, 1; \
     la  x2, 1f;
-    jalr x19, x2, -4; \
+    jalr x13, x2, -4; \
     addi x1, x1, 1; \
     addi x1, x1, 1; \
     addi x1, x1, 1; \

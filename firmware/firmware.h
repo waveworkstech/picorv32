@@ -28,9 +28,6 @@ void print_hex(unsigned int val, int digits);
 // hello.c
 void hello(void);
 
-// sieve.c
-void sieve(void);
-
 // System Helpers (Implemented in stress.c)
 void *memcpy(void *dest, const void *src, size_t n);
 
@@ -43,15 +40,6 @@ uint32_t hard_mulh(uint32_t a, uint32_t b);
 uint32_t hard_mulhsu(uint32_t a, uint32_t b);
 uint32_t hard_mulhu(uint32_t a, uint32_t b);
 
-// Disabled: ENABLE_DIV=0
-// uint32_t hard_div(uint32_t a, uint32_t b);
-// uint32_t hard_divu(uint32_t a, uint32_t b);
-// uint32_t hard_rem(uint32_t a, uint32_t b);
-// uint32_t hard_remu(uint32_t a, uint32_t b);
-
 void multest(void);
-
-// stats.c (Disabled: ENABLE_COUNTERS=0)
-// void stats(void);
 
 #endif

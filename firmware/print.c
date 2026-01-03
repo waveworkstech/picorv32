@@ -22,15 +22,30 @@ void print_str(const char *p)
 
 void print_dec(unsigned int val)
 {
-	char buffer[10];
-	char *p = buffer;
-	while (val || p == buffer) {
-		*(p++) = val % 10;
-		val = val / 10;
-	}
-	while (p != buffer) {
-		*((volatile uint32_t*)OUTPORT) = '0' + *(--p);
-	}
+    char buffer[10];
+    char *p = buffer;
+    if (val == 0) {
+        print_chr('0');
+        return;
+    }
+    
+    // Subtraction-based modulus/division
+    while (val > 0) {
+        unsigned int rem = val;
+        unsigned int quo = 0;
+        
+        while (rem >= 10) {
+            rem -= 10;
+            quo++;
+        }
+        
+        *p++ = rem + '0';
+        val = quo;
+    }
+    
+    while (p != buffer) {
+        *((volatile uint32_t*)OUTPORT) = *(--p);
+    }
 }
 
 void print_hex(unsigned int val, int digits)

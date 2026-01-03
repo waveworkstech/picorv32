@@ -14,8 +14,11 @@ ICARUS_SUFFIX =
 IVERILOG = iverilog$(ICARUS_SUFFIX)
 VVP = vvp$(ICARUS_SUFFIX)
 
-TEST_OBJS = $(addsuffix .o,$(basename $(wildcard tests/*.S)))
-FIRMWARE_OBJS = firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/sieve.o firmware/multest.o
+# Get all tests, but filter out division/remainder tests which are incompatible with RV32E/No-Div
+ALL_TESTS = $(addsuffix .o,$(basename $(wildcard tests/*.S)))
+EXCLUDE_TESTS = tests/div.o tests/divu.o tests/rem.o tests/remu.o
+TEST_OBJS = $(filter-out $(EXCLUDE_TESTS), $(ALL_TESTS))
+FIRMWARE_OBJS = firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/multest.o
 FIRMWARE_OBJS += firmware/stress.o
 GCC_WARNS  = -Werror -Wall -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings
 GCC_WARNS += -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -pedantic # -Wconversion
@@ -110,24 +113,25 @@ firmware/firmware.bin: firmware/firmware.elf
 	chmod -x $@
 
 firmware/firmware.elf: $(FIRMWARE_OBJS) $(TEST_OBJS) firmware/sections.lds
-    $(TOOLCHAIN_PREFIX)gcc -Os -mabi=ilp32e -march=rv32em$(subst C,c,$(COMPRESSED_ISA)) -ffreestanding -nostdlib -o $@ \
-        -Wl,--build-id=none,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
-        $(FIRMWARE_OBJS) $(TEST_OBJS) -lgcc
+	$(TOOLCHAIN_PREFIX)gcc -Os -mabi=ilp32e -march=rv32em$(subst C,c,$(COMPRESSED_ISA)) -ffreestanding -nostdlib -o $@ \
+		-Wl,--build-id=none,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
+		$(FIRMWARE_OBJS) $(TEST_OBJS)
+	chmod -x $@
 
 firmware/start.o: firmware/start.S
-    $(TOOLCHAIN_PREFIX)gcc -c -mabi=ilp32e -march=rv32em$(subst C,c,$(COMPRESSED_ISA)) -o $@ $<
+	$(TOOLCHAIN_PREFIX)gcc -c -mabi=ilp32e -march=rv32em$(subst C,c,$(COMPRESSED_ISA)) -o $@ $<
 
 firmware/%.o: firmware/%.c
-    $(TOOLCHAIN_PREFIX)gcc -c -mabi=ilp32e -march=rv32e$(subst C,c,$(COMPRESSED_ISA)) -Os --std=c99 $(GCC_WARNS) -ffreestanding -nostdlib -o $@ $<
+	$(TOOLCHAIN_PREFIX)gcc -c -mabi=ilp32e -march=rv32em$(subst C,c,$(COMPRESSED_ISA)) -Os --std=c99 $(GCC_WARNS) -ffreestanding -nostdlib -o $@ $<
 
 # Specific rule for RVC test to enable 'c' extension
 tests/rvc_test.o: tests/rvc_test.S tests/riscv_test.h tests/test_macros.h
-    $(TOOLCHAIN_PREFIX)gcc -c -mabi=ilp32e -march=rv32emc -o $@ -DTEST_FUNC_NAME=rvc_test \
-        -DTEST_FUNC_TXT='"rvc_test"' -DTEST_FUNC_RET=rvc_test_ret $<
+	$(TOOLCHAIN_PREFIX)gcc -c -mabi=ilp32e -march=rv32emc -o $@ -DTEST_FUNC_NAME=rvc_test \
+		-DTEST_FUNC_TXT='"rvc_test"' -DTEST_FUNC_RET=rvc_test_ret $<
 
 tests/%.o: tests/%.S tests/riscv_test.h tests/test_macros.h
-    $(TOOLCHAIN_PREFIX)gcc -c -mabi=ilp32e -march=rv32em -o $@ -DTEST_FUNC_NAME=$(notdir $(basename $<)) \
-        -DTEST_FUNC_TXT='"$(notdir $(basename $<))"' -DTEST_FUNC_RET=$(notdir $(basename $<))_ret $<
+	$(TOOLCHAIN_PREFIX)gcc -c -mabi=ilp32e -march=rv32em -o $@ -DTEST_FUNC_NAME=$(notdir $(basename $<)) \
+		-DTEST_FUNC_TXT='"$(notdir $(basename $<))"' -DTEST_FUNC_RET=$(notdir $(basename $<))_ret $<
 
 download-tools:
 	mkdir -p $(RISCV_RESOURCES)

@@ -26,14 +26,15 @@
 //   v: Expected Value
 //   code: Instruction sequence to execute
 // -----------------------------------------------------------------------------
+// RV32E UPDATE: Replaced x29 with x14 (a4)
 #define RVC_TEST_CASE(n, r, v, code...) \
     li TESTNUM, n; \
     .option push; \
     .option rvc; \
     code; \
     .option pop; \
-    li x29, v; \
-    bne r, x29, fail;
+    li x14, v; \
+    bne r, x14, fail;
 
 RVTEST_CODE_BEGIN
 
@@ -51,8 +52,8 @@ data_boundary:
     .skip 4094
 1: 
     addi a1, a1, 1
-    li x29, 667
-    bne a1, x29, fail
+    li x14, 667
+    bne a1, x14, fail
 
     // ----------------------------------------------------------------
     // Test 3-5: Stack Pointer Adjustments (c.addi4spn, c.addi16sp)
